@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24127" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24063"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <array key="HelveticaNeue.ttc">
+            <string>HelveticaNeue-Medium</string>
+        </array>
+    </customFonts>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" restorationIdentifier="MonthFilterView" id="7D6-6f-MWm" customClass="MonthFilterView" customModule="Xpenses" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="393" height="143"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <subviews>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="EXPENSES" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QoH-E8-jTx">
+                    <rect key="frame" x="154.66666666666666" y="39.333333333333336" width="84" height="20"/>
+                    <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="16"/>
+                    <color key="textColor" red="0.58039215690000001" green="0.63921568630000003" blue="0.72156862749999995" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nap-pO-2BZ">
+                    <rect key="frame" x="117.66666666666669" y="54.333333333333329" width="158" height="34.333333333333329"/>
+                    <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                    <state key="normal" title="January 2026" image="chevron.down" catalog="system"/>
+                    <buttonConfiguration key="configuration" style="plain" image="chevron.down" catalog="system" imagePlacement="trailing" title="January 2026" imagePadding="5"/>
+                    <connections>
+                        <action selector="dropDownButtonTapped:" destination="7D6-6f-MWm" eventType="touchUpInside" id="vd3-Kl-aPa"/>
+                    </connections>
+                </button>
+            </subviews>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstItem="QoH-E8-jTx" firstAttribute="centerX" secondItem="7D6-6f-MWm" secondAttribute="centerX" id="7AH-Xp-6yh"/>
+                <constraint firstItem="nap-pO-2BZ" firstAttribute="centerY" secondItem="7D6-6f-MWm" secondAttribute="centerY" id="9XD-UQ-qeF"/>
+                <constraint firstItem="nap-pO-2BZ" firstAttribute="centerX" secondItem="7D6-6f-MWm" secondAttribute="centerX" id="EU1-La-3KM"/>
+                <constraint firstItem="nap-pO-2BZ" firstAttribute="top" secondItem="QoH-E8-jTx" secondAttribute="bottom" constant="-5" id="fgT-2Q-s0n"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="monthButton" destination="nap-pO-2BZ" id="5p7-Fm-cvM"/>
+            </connections>
+            <point key="canvasLocation" x="301.52671755725191" y="-129.92957746478874"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="chevron.down" catalog="system" width="128" height="70"/>
+    </resources>
+</document>

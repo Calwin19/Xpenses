@@ -55,7 +55,7 @@
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6bC-0s-u55">
                                 <rect key="frame" x="0.0" y="172" width="393" height="82"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="82" id="geO-ZZ-oTD"/>
                                 </constraints>
@@ -91,7 +91,7 @@
                                                 </label>
                                                 <view alpha="0.10000000000000001" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qxM-Wf-HKZ">
                                                     <rect key="frame" x="112" y="34.666666666666664" width="265" height="1"/>
-                                                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="1" id="D9w-Ij-mE3"/>
                                                     </constraints>
@@ -206,6 +206,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="TLq-hQ-es2"/>
                     <connections>
+                        <outlet property="monthFilterContainer" destination="6bC-0s-u55" id="JRL-ST-pmF"/>
                         <outlet property="totalSpendingLabel" destination="qNh-X6-aPo" id="Rds-r2-eAY"/>
                         <outlet property="transactionsTableView" destination="1TE-Qv-ZP0" id="E9g-cu-vAm"/>
                     </connections>
