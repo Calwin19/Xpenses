@@ -111,7 +111,7 @@ class AddTransactionViewController: UIViewController {
     
     @IBAction func saveButtonTapped(_ sender: UIButton) {
         let newTransaction = Transaction(amount: Double(amountTextField.text?.replacingOccurrences(of: "₹", with: "") ?? "") ?? 0, categoty: categoryTextField.text ?? "", date: dateSelected, type: "Debit", note: noteTextField.text ?? "")
-        Storage.save(newTransaction)
+        APIService.shared.addTransaction(newTransaction)
         self.navigationController?.popViewController(animated: true)
     }
     

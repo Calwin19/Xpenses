@@ -14,7 +14,7 @@ struct Transaction: Codable, Identifiable {
     var category: String
     var date: Date
     var type: String
-    var note: String
+    var note: String?
     
     init(amount: Double, categoty: String, date: Date, type: String, note: String){
         self.id = UUID()

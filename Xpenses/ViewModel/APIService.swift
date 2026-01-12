@@ -1,0 +1,65 @@
+//
+//  APIService.swift
+//  Xpenses
+//
+//  Created by Calwin QuickRide on 12/01/26.
+//
+
+import Foundation
+
+class APIService {
+    static let shared = APIService()
+    private init() {}
+    private let baseURL = "https://xpenses-backend-dudi.onrender.com"
+    func fetchTransactions(completion: @escaping (Result<[Transaction], Error>) -> Void) {
+        let url = URL(string: "\(baseURL)/transactions")!
+        URLSession.shared.dataTask(with: url) { data, response, error in
+            if let error = error {
+                completion(.failure(error))
+                return
+            }
+            guard let data = data else {
+                completion(.failure(NSError()))
+                return
+            }
+            do {
+                let transactions = try JSONDecoder.isoDecoder
+                    .decode([Transaction].self, from: data)
+                completion(.success(transactions))
+            } catch {
+                completion(.failure(error))
+            }
+        }.resume()
+    }
+    
+    func addTransaction(_ transaction: Transaction) {
+        let url = URL(string: "\(baseURL)/transactions")!
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        let dto = TransactionDTO(
+            id: transaction.id,
+            amount: transaction.amount,
+            category: transaction.category,
+            date: transaction.date,
+            type: transaction.type,
+            note: transaction.note
+        )
+        let encoder = JSONEncoder()
+        encoder.dateEncodingStrategy = .iso8601
+        request.httpBody = try? encoder.encode(dto)
+        URLSession.shared.dataTask(with: request).resume()
+    }
+
+    func deleteTransaction(id: UUID, completion: (() -> Void)? = nil) {
+        let url = URL(string: "\(baseURL)/transactions/\(id.uuidString)")!
+        var request = URLRequest(url: url)
+        request.httpMethod = "DELETE"
+        URLSession.shared.dataTask(with: request) { _, _, _ in
+            DispatchQueue.main.async {
+                completion?()
+            }
+        }.resume()
+    }
+
+}

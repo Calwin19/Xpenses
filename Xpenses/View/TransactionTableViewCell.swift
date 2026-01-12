@@ -14,7 +14,7 @@ class TransactionTableViewCell: UITableViewCell {
     @IBOutlet weak var amountLabel: UILabel!
     
     func initialize(with transaction: Transaction) {
-        titleLabel.text = transaction.note.capitalized
+        titleLabel.text = transaction.note?.capitalized
         categoryLabel.text = transaction.category.capitalized
         amountLabel.text = "₹\(transaction.amount)"
     }

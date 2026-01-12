@@ -17,7 +17,9 @@ class HomePageViewController: UIViewController {
     @IBOutlet weak var totalSpendingLabel: UILabel!
     @IBOutlet weak var monthFilterContainer: UIView!
     
+    private let spinner = UIActivityIndicatorView(style: .large)
     var transactionSections = [TransactionSection]()
+    var transactions = [Transaction]()
     var monthFilterView: MonthFilterView!
     var selectedMonth = Date()
     
@@ -26,14 +28,67 @@ class HomePageViewController: UIViewController {
         transactionsTableView.dataSource = self
         transactionsTableView.delegate = self
         setupMonthFilterView()
-        reloadTableView()
+        setupSpinner()
+        getData()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        reloadTableView()
     }
     
+    func getData() {
+        showSpinner()
+        APIService.shared.fetchTransactions { result in
+            DispatchQueue.main.async {
+                self.hideSpinner()
+                switch result {
+                case .success(let data):
+                    self.transactions = data
+                    self.reloadTableView()
+
+                case .failure(let error):
+                    print("API Error:", error)
+                    self.showError()
+                }
+            }
+        }
+    }
+    
+    func makeSections(from transactions: [Transaction]) -> [TransactionSection] {
+        let grouped = Dictionary(grouping: transactions) {
+            $0.date.startOfDay()
+        }
+        let sections = grouped.map {
+            TransactionSection(date: $0.key, transactions: $0.value.sorted { $0.date > $1.date })
+        }.sorted { $0.date > $1.date }
+        return sections
+    }
+    
+    func setupSpinner() {
+        spinner.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(spinner)
+        NSLayoutConstraint.activate([
+            spinner.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            spinner.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+        ])
+    }
+
+    func showSpinner() {
+        spinner.startAnimating()
+        view.isUserInteractionEnabled = false
+    }
+
+    func hideSpinner() {
+        spinner.stopAnimating()
+        view.isUserInteractionEnabled = true
+    }
+
+    func showError() {
+        let alert = UIAlertController(title: "Please wait", message: "Waking up server, this may take a few seconds.", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        present(alert, animated: true)
+    }
+
     func setupMonthFilterView() {
         monthFilterView = Bundle.main.loadNibNamed("MonthFilterView", owner: self)?.first as? MonthFilterView
         monthFilterView.frame = monthFilterContainer.bounds
@@ -48,8 +103,7 @@ class HomePageViewController: UIViewController {
     }
     
     func reloadTableView() {
-        let allSections = Storage.load()
-        transactionSections = allSections.filter { Calendar.current.isDate($0.date, equalTo: selectedMonth, toGranularity: .month)}.sorted { $0.date > $1.date }
+        transactionSections = makeSections(from: transactions).filter { Calendar.current.isDate($0.date, equalTo: selectedMonth, toGranularity: .month)}.sorted { $0.date > $1.date }
         sumOfTransactions()
         transactionsTableView.reloadData()
     }
@@ -78,9 +132,14 @@ extension HomePageViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         if indexPath.row == 0 { return nil }
         let delete = UIContextualAction(style: .destructive, title: "Delete") { _, _, completion in
-            Storage.delete(indexPath: indexPath)
-            self.reloadTableView()
-            completion(true)
+            let transaction = self.transactionSections[indexPath.section].transactions[indexPath.row - 1]
+            APIService.shared.deleteTransaction(id: transaction.id) {
+                if let index = self.transactions.firstIndex(where: { $0.id == transaction.id }) {
+                    self.transactions.remove(at: index)
+                }
+                self.reloadTableView()
+                completion(true)
+            }
         }
         return UISwipeActionsConfiguration(actions: [delete])
     }
