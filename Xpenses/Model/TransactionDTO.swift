@@ -10,7 +10,7 @@ import Foundation
 struct TransactionDTO: Codable {
     let id: UUID
     let amount: Double
-    let category: String
+    let category: String?
     let date: Date
     let type: String
     let note: String?

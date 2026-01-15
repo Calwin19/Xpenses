@@ -10,7 +10,7 @@ import Foundation
 class APIService {
     static let shared = APIService()
     private init() {}
-    private let baseURL = "https://xpenses-backend-dudi.onrender.com"
+    private let baseURL = "http://140.245.198.94"
     func fetchTransactions(completion: @escaping (Result<[Transaction], Error>) -> Void) {
         let url = URL(string: "\(baseURL)/transactions")!
         URLSession.shared.dataTask(with: url) { data, response, error in

@@ -11,7 +11,7 @@ struct Transaction: Codable, Identifiable {
     
     var id: UUID
     var amount: Double
-    var category: String
+    var category: String?
     var date: Date
     var type: String
     var note: String?

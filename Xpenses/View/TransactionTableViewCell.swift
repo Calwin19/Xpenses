@@ -15,7 +15,7 @@ class TransactionTableViewCell: UITableViewCell {
     
     func initialize(with transaction: Transaction) {
         titleLabel.text = transaction.note?.capitalized
-        categoryLabel.text = transaction.category.capitalized
+        categoryLabel.text = transaction.category?.capitalized
         amountLabel.text = "₹\(transaction.amount)"
     }
 }
