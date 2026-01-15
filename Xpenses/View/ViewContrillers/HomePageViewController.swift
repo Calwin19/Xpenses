@@ -34,8 +34,18 @@ class HomePageViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        NotificationCenter.default.addObserver(self, selector: #selector(reloadTransactions), name: .transactionsChanges, object: nil)
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        NotificationCenter.default.removeObserver(self)
+    }
+
+    @objc private func reloadTransactions() {
+        getData()
+    }
+
     func getData() {
         showSpinner()
         APIService.shared.fetchTransactions { result in
@@ -129,6 +139,14 @@ extension HomePageViewController: UITableViewDataSource, UITableViewDelegate {
         }
     }
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if indexPath.row == 0 { return }
+        let transaction = transactionSections[indexPath.section].transactions[indexPath.row - 1]
+        let addTransactionViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "AddTransactionViewController") as! AddTransactionViewController
+        addTransactionViewController.initliseWithTransaction(transaction)
+        self.navigationController?.pushViewController(addTransactionViewController, animated: true)
+    }
+    
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         if indexPath.row == 0 { return nil }
         let delete = UIContextualAction(style: .destructive, title: "Delete") { _, _, completion in
@@ -168,4 +186,8 @@ extension HomePageViewController: MonthFilterViewDelegate {
         present(alert, animated: true)
     }
 
+}
+
+extension Notification.Name {
+    static let transactionsChanges = Notification.Name("transactionsChanges")
 }

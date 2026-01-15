@@ -32,7 +32,7 @@ class APIService {
         }.resume()
     }
     
-    func addTransaction(_ transaction: Transaction) {
+    func addTransaction(_ transaction: Transaction, completion: (() -> Void)? = nil) {
         let url = URL(string: "\(baseURL)/transactions")!
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
@@ -48,7 +48,11 @@ class APIService {
         let encoder = JSONEncoder()
         encoder.dateEncodingStrategy = .iso8601
         request.httpBody = try? encoder.encode(dto)
-        URLSession.shared.dataTask(with: request).resume()
+        URLSession.shared.dataTask(with: request) { _, _, _ in
+            DispatchQueue.main.async {
+                completion?()
+            }
+        }.resume()
     }
 
     func deleteTransaction(id: UUID, completion: (() -> Void)? = nil) {
@@ -62,4 +66,39 @@ class APIService {
         }.resume()
     }
 
+    func updateTransaction(_ transaction: Transaction, completion: ((Result<Transaction, Error>) -> Void)? = nil) {
+        let url = URL(string: "\(baseURL)/transactions/\(transaction.id.uuidString)")!
+        var request = URLRequest(url: url)
+        request.httpMethod = "PUT"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        let dto = TransactionDTO(
+            id: transaction.id,
+            amount: transaction.amount,
+            category: transaction.category,
+            date: transaction.date,
+            type: transaction.type,
+            note: transaction.note
+        )
+        let encoder = JSONEncoder()
+        encoder.dateEncodingStrategy = .iso8601
+        request.httpBody = try? encoder.encode(dto)
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            if let error = error {
+                completion?(.failure(error))
+                return
+            }
+            guard let data = data else {
+                completion?(.failure(NSError()))
+                return
+            }
+            do {
+                let updated = try JSONDecoder.isoDecoder.decode(Transaction.self, from: data)
+                DispatchQueue.main.async {
+                    completion?(.success(updated))
+                }
+            } catch {
+                completion?(.failure(error))
+            }
+        }.resume()
+    }
 }

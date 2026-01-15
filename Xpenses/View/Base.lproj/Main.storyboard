@@ -76,7 +76,7 @@
                                 <rect key="frame" x="0.0" y="341" width="393" height="394"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="TransactionDateTableViewCell" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="TransactionDateTableViewCell" rowHeight="45" id="il7-L1-OAm" customClass="TransactionDateTableViewCell" customModule="Xpenses" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="TransactionDateTableViewCell" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="TransactionDateTableViewCell" rowHeight="45" id="il7-L1-OAm" customClass="TransactionDateTableViewCell" customModule="Xpenses" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="50" width="393" height="45"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="il7-L1-OAm" id="ljU-wK-Qep">
@@ -117,7 +117,7 @@
                                             <outlet property="dateLabel" destination="RTX-Sg-gas" id="N0z-re-BIh"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="TransactionTableViewCell" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="TransactionTableViewCell" rowHeight="86" id="nnZ-No-OVX" customClass="TransactionTableViewCell" customModule="Xpenses" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="TransactionTableViewCell" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="TransactionTableViewCell" rowHeight="86" id="nnZ-No-OVX" customClass="TransactionTableViewCell" customModule="Xpenses" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="95" width="393" height="86"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="nnZ-No-OVX" id="iW1-Vg-fSY">
@@ -642,6 +642,7 @@
                         <outlet property="dateButton" destination="lA3-Nj-BWv" id="TBS-iG-F8m"/>
                         <outlet property="noteTextField" destination="u1N-Yv-aSw" id="QHk-vJ-Xeo"/>
                         <outlet property="scrollView" destination="xYk-5w-BEB" id="YIu-es-OMf"/>
+                        <outlet property="titleLabel" destination="tyi-De-ooa" id="PAG-YH-PYv"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="eZW-if-Zs4" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

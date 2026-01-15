@@ -9,6 +9,7 @@ import UIKit
 
 class AddTransactionViewController: UIViewController {
     
+    @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var amountTextField: UITextField!
     @IBOutlet weak var categoryTextField: UITextField!
     @IBOutlet weak var dateButton: UIButton!
@@ -16,7 +17,12 @@ class AddTransactionViewController: UIViewController {
     @IBOutlet weak var scrollView: UIScrollView!
     
     var dateSelected: Date = Date()
+    var transaction: Transaction?
     private weak var acticeField: UIResponder?
+    
+    func initliseWithTransaction(_ transaction: Transaction) {
+        self.transaction = transaction
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,9 +31,7 @@ class AddTransactionViewController: UIViewController {
         amountTextField.delegate = self
         categoryTextField.delegate = self
         noteTextField.delegate = self
-        let Formatter = DateFormatter()
-        Formatter.dateStyle = .medium
-        dateButton.setTitle(Formatter.string(from: dateSelected), for: .normal)
+        setupUI()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -39,6 +43,21 @@ class AddTransactionViewController: UIViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         NotificationCenter.default.removeObserver(self)
+    }
+    
+    func setupUI() {
+        let Formatter = DateFormatter()
+        Formatter.dateStyle = .medium
+        if let transaction = transaction {
+            amountTextField.text = "₹\(transaction.amount)"
+            categoryTextField.text = transaction.category
+            noteTextField.text = transaction.note
+            dateButton.setTitle(Formatter.string(from: transaction.date), for: .normal)
+            titleLabel.text = "Edit Expense"
+        } else {
+            dateButton.setTitle(Formatter.string(from: dateSelected), for: .normal)
+            titleLabel.text = "Add Expense"
+        }
     }
 
     @objc private func keyboardWillShow(_ notification: Notification) {
@@ -110,8 +129,24 @@ class AddTransactionViewController: UIViewController {
     }
     
     @IBAction func saveButtonTapped(_ sender: UIButton) {
-        let newTransaction = Transaction(amount: Double(amountTextField.text?.replacingOccurrences(of: "₹", with: "") ?? "") ?? 0, categoty: categoryTextField.text ?? "", date: dateSelected, type: "Debit", note: noteTextField.text ?? "")
-        APIService.shared.addTransaction(newTransaction)
+        if let transaction = transaction {
+            let existingTransaction = Transaction(id: transaction.id, amount: Double(amountTextField.text?.replacingOccurrences(of: "₹", with: "") ?? "") ?? 0, categoty: categoryTextField.text ?? "", date: dateSelected, type: "Debit", note: noteTextField.text ?? "")
+            APIService.shared.updateTransaction(existingTransaction) { result in
+                DispatchQueue.main.async {
+                    switch result {
+                    case .success(let _):
+                        NotificationCenter.default.post(name: .transactionsChanges, object: nil)
+                    case .failure(let error):
+                        print("Edit failed:", error)
+                    }
+                }
+            }
+        } else {
+            let newTransaction = Transaction(amount: Double(amountTextField.text?.replacingOccurrences(of: "₹", with: "") ?? "") ?? 0, categoty: categoryTextField.text ?? "", date: dateSelected, type: "Debit", note: noteTextField.text ?? "")
+            APIService.shared.addTransaction(newTransaction){
+                NotificationCenter.default.post(name: .transactionsChanges, object: nil)
+            }
+        }
         self.navigationController?.popViewController(animated: true)
     }
     

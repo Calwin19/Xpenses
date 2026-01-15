@@ -13,7 +13,6 @@ class MainTabBarController: UITabBarController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         delegate = self
         attachNavDelegates()
         disableMiddleTab()
@@ -87,7 +86,6 @@ class MainTabBarController: UITabBarController {
     @objc private func addTapped() {
         guard let nav = selectedViewController as? UINavigationController else { return }
         let addVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "AddTransactionViewController") as! AddTransactionViewController
-        addVC.hidesBottomBarWhenPushed = true
         nav.pushViewController(addVC, animated: true)
     }
 
