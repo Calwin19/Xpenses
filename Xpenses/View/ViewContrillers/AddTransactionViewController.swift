@@ -54,6 +54,7 @@ class AddTransactionViewController: UIViewController {
             noteTextField.text = transaction.note
             dateButton.setTitle(Formatter.string(from: transaction.date), for: .normal)
             titleLabel.text = "Edit Expense"
+            dateSelected = transaction.date
         } else {
             dateButton.setTitle(Formatter.string(from: dateSelected), for: .normal)
             titleLabel.text = "Add Expense"
@@ -130,7 +131,7 @@ class AddTransactionViewController: UIViewController {
     
     @IBAction func saveButtonTapped(_ sender: UIButton) {
         if let transaction = transaction {
-            let existingTransaction = Transaction(id: transaction.id, amount: Double(amountTextField.text?.replacingOccurrences(of: "₹", with: "") ?? "") ?? 0, categoty: categoryTextField.text ?? "", date: dateSelected, type: "Debit", note: noteTextField.text ?? "")
+            let existingTransaction = Transaction(id: transaction.id, amount: Double(amountTextField.text?.replacingOccurrences(of: "₹", with: "") ?? "") ?? 0, categoty: categoryTextField.text ?? "", timestamp: dateSelected.timeIntervalSince1970, type: "Debit", note: noteTextField.text ?? "")
             APIService.shared.updateTransaction(existingTransaction) { result in
                 DispatchQueue.main.async {
                     switch result {
@@ -142,7 +143,7 @@ class AddTransactionViewController: UIViewController {
                 }
             }
         } else {
-            let newTransaction = Transaction(amount: Double(amountTextField.text?.replacingOccurrences(of: "₹", with: "") ?? "") ?? 0, categoty: categoryTextField.text ?? "", date: dateSelected, type: "Debit", note: noteTextField.text ?? "")
+            let newTransaction = Transaction(amount: Double(amountTextField.text?.replacingOccurrences(of: "₹", with: "") ?? "") ?? 0, categoty: categoryTextField.text ?? "", timestamp: dateSelected.timeIntervalSince1970, type: "Debit", note: noteTextField.text ?? "")
             APIService.shared.addTransaction(newTransaction){
                 NotificationCenter.default.post(name: .transactionsChanges, object: nil)
             }

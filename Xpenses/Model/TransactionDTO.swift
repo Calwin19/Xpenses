@@ -11,7 +11,7 @@ struct TransactionDTO: Codable {
     let id: UUID
     let amount: Double
     let category: String?
-    let date: Date
+    let date: TimeInterval
     let type: String
     let note: String?
 }

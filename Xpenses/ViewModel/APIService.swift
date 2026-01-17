@@ -41,7 +41,7 @@ class APIService {
             id: transaction.id,
             amount: transaction.amount,
             category: transaction.category,
-            date: transaction.date,
+            date: transaction.timestamp,
             type: transaction.type,
             note: transaction.note
         )
@@ -75,7 +75,7 @@ class APIService {
             id: transaction.id,
             amount: transaction.amount,
             category: transaction.category,
-            date: transaction.date,
+            date: transaction.timestamp,
             type: transaction.type,
             note: transaction.note
         )

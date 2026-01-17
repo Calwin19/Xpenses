@@ -55,7 +55,6 @@ class HomePageViewController: UIViewController {
                 case .success(let data):
                     self.transactions = data
                     self.reloadTableView()
-
                 case .failure(let error):
                     print("API Error:", error)
                     self.showError()
@@ -66,12 +65,12 @@ class HomePageViewController: UIViewController {
     
     func makeSections(from transactions: [Transaction]) -> [TransactionSection] {
         let grouped = Dictionary(grouping: transactions) {
-            $0.date.startOfDay()
+            Calendar.current.startOfDay(for: $0.date)
         }
-        let sections = grouped.map {
-            TransactionSection(date: $0.key, transactions: $0.value.sorted { $0.date > $1.date })
-        }.sorted { $0.date > $1.date }
-        return sections
+
+        return grouped
+            .map { TransactionSection(date: $0.key, transactions: $0.value) }
+            .sorted { $0.date > $1.date }
     }
     
     func setupSpinner() {
