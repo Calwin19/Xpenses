@@ -10,11 +10,13 @@ import UIKit
 class AddTransactionViewController: UIViewController {
     
     @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var expenseIncomeSwitch: UISwitch!
     @IBOutlet weak var amountTextField: UITextField!
     @IBOutlet weak var categoryTextField: UITextField!
     @IBOutlet weak var dateButton: UIButton!
     @IBOutlet weak var noteTextField: UITextField!
     @IBOutlet weak var scrollView: UIScrollView!
+    @IBOutlet weak var saveButton: UIButton!
     
     var dateSelected: Date = Calendar.current.startOfDay(for: Date())
     var transaction: Transaction?
@@ -102,6 +104,16 @@ class AddTransactionViewController: UIViewController {
         self.navigationController?.popViewController(animated: true)
     }
     
+    @IBAction func expenseIncomeSwitch(_ sender: UISwitch) {
+        if sender.isOn {
+            titleLabel.text = transaction == nil ? "Add Expense" : "Edit Expense"
+            saveButton.setTitle("Save Expense", for: .normal)
+        } else {
+            titleLabel.text = transaction == nil ? "Add Income" : "Edit Income"
+            saveButton.setTitle("Save Income", for: .normal)
+        }
+    }
+    
     @IBAction func dateButtonTapped(_ sender: UIButton) {
         let alert = UIAlertController(title: "Select Date", message: nil, preferredStyle: .actionSheet)
         let datePicker = UIDatePicker()
@@ -131,11 +143,11 @@ class AddTransactionViewController: UIViewController {
     
     @IBAction func saveButtonTapped(_ sender: UIButton) {
         if let transaction = transaction {
-            let existingTransaction = Transaction(id: transaction.id, amount: Double(amountTextField.text?.replacingOccurrences(of: "₹", with: "") ?? "") ?? 0, categoty: categoryTextField.text ?? "", timestamp: dateSelected.timeIntervalSince1970, type: "Debit", note: noteTextField.text ?? "")
+            let existingTransaction = Transaction(id: transaction.id, amount: Double(amountTextField.text?.replacingOccurrences(of: "₹", with: "") ?? "") ?? 0, categoty: categoryTextField.text ?? "", timestamp: dateSelected.timeIntervalSince1970, type: expenseIncomeSwitch.isOn ? "Debit" : "Credit", note: noteTextField.text ?? "")
             APIService.shared.updateTransaction(existingTransaction) { result in
                 DispatchQueue.main.async {
                     switch result {
-                    case .success(let _):
+                    case .success( _):
                         NotificationCenter.default.post(name: .transactionsChanges, object: nil)
                     case .failure(let error):
                         print("Edit failed:", error)
@@ -143,7 +155,7 @@ class AddTransactionViewController: UIViewController {
                 }
             }
         } else {
-            let newTransaction = Transaction(amount: Double(amountTextField.text?.replacingOccurrences(of: "₹", with: "") ?? "") ?? 0, categoty: categoryTextField.text ?? "", timestamp: dateSelected.timeIntervalSince1970, type: "Debit", note: noteTextField.text ?? "")
+            let newTransaction = Transaction(amount: Double(amountTextField.text?.replacingOccurrences(of: "₹", with: "") ?? "") ?? 0, categoty: categoryTextField.text ?? "", timestamp: dateSelected.timeIntervalSince1970, type: expenseIncomeSwitch.isOn ? "Debit" : "Credit", note: noteTextField.text ?? "")
             APIService.shared.addTransaction(newTransaction){
                 NotificationCenter.default.post(name: .transactionsChanges, object: nil)
             }

@@ -16,6 +16,7 @@ class HomePageViewController: UIViewController {
     @IBOutlet weak var transactionsTableView: UITableView!
     @IBOutlet weak var totalSpendingLabel: UILabel!
     @IBOutlet weak var monthFilterContainer: UIView!
+    @IBOutlet weak var balanceLabel: UILabel!
     
     private let spinner = UIActivityIndicatorView(style: .large)
     var transactionSections = [TransactionSection]()
@@ -108,12 +109,27 @@ class HomePageViewController: UIViewController {
     }
 
     func sumOfTransactions() {
-        totalSpendingLabel.text = "₹\(transactionSections.flatMap{ $0.transactions }.reduce(0) {$0 + $1.amount})"
+        totalSpendingLabel.text = "₹\(transactionSections.flatMap{ $0.transactions }.filter({$0.type == "Debit"}).reduce(0) {$0 + $1.amount})"
     }
     
+    func calculateBalance() {
+        let income = transactionSections
+            .flatMap { $0.transactions }
+            .filter { $0.type == "Credit" }
+            .reduce(0) { $0 + $1.amount }
+
+        let expense = transactionSections
+            .flatMap { $0.transactions }
+            .filter { $0.type == "Debit" }
+            .reduce(0) { $0 + $1.amount }
+
+        balanceLabel.text = "₹\(income - expense)"
+    }
+
     func reloadTableView() {
         transactionSections = makeSections(from: transactions).filter { Calendar.current.isDate($0.date, equalTo: selectedMonth, toGranularity: .month)}.sorted { $0.date > $1.date }
         sumOfTransactions()
+        calculateBalance()
         transactionsTableView.reloadData()
     }
 }
