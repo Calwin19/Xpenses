@@ -16,7 +16,7 @@ class AddTransactionViewController: UIViewController {
     @IBOutlet weak var noteTextField: UITextField!
     @IBOutlet weak var scrollView: UIScrollView!
     
-    var dateSelected: Date = Date()
+    var dateSelected: Date = Calendar.current.startOfDay(for: Date())
     var transaction: Transaction?
     private weak var acticeField: UIResponder?
     
