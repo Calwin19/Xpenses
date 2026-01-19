@@ -17,14 +17,31 @@ struct Transaction: Codable, Identifiable, Sendable {
     var note: String?
     var source: String?
     var destination: String?
+    var borrower: String?
+    var didPay: Bool = false
 
-    init(id: UUID = UUID(), amount: Double, categoty: String, timestamp: TimeInterval, type: String, note: String){
+    init(id: UUID = UUID(), amount: Double, categoty: String, timestamp: TimeInterval, type: String, note: String, borrower: String, didPay: Bool){
         self.id = id
         self.amount = amount
         self.category = categoty
         self.timestamp = timestamp
         self.type = type
         self.note = note
+        self.borrower = borrower
+        self.didPay = didPay
+    }
+    
+    enum CodingKeys: String, CodingKey {
+        case id
+        case amount
+        case category
+        case timestamp
+        case type
+        case note
+        case source
+        case destination
+        case borrower
+        case didPay = "did_pay"
     }
 }
 

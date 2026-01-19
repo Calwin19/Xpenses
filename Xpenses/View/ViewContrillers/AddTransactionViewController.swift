@@ -17,6 +17,8 @@ class AddTransactionViewController: UIViewController {
     @IBOutlet weak var amountTextField: UITextField!
     @IBOutlet weak var categoryTextField: UITextField!
     @IBOutlet weak var dateButton: UIButton!
+    @IBOutlet weak var borrowerNameTextField: UITextField!
+    @IBOutlet weak var didPaySwitch: UISwitch!
     @IBOutlet weak var noteTextField: UITextField!
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var saveButton: UIButton!
@@ -55,13 +57,15 @@ class AddTransactionViewController: UIViewController {
         let Formatter = DateFormatter()
         Formatter.dateStyle = .medium
         if let transaction = transaction {
-            amountTextField.text = "₹\(transaction.amount)"
-            categoryTextField.text = transaction.category
-            noteTextField.text = transaction.note
-            dateButton.setTitle(Formatter.string(from: transaction.date), for: .normal)
             selectedTab = transaction.type == "Debit" ? .expense : .income
             switchTab(to: selectedTab)
+            amountTextField.text = "₹\(transaction.amount)"
+            categoryTextField.text = transaction.category
+            dateButton.setTitle(Formatter.string(from: transaction.date), for: .normal)
             dateSelected = transaction.date
+            borrowerNameTextField.text = transaction.borrower
+            didPaySwitch.isOn = transaction.didPay
+            noteTextField.text = transaction.note
         } else {
             dateButton.setTitle(Formatter.string(from: dateSelected), for: .normal)
             titleLabel.text = "Add Expense"
@@ -164,9 +168,15 @@ class AddTransactionViewController: UIViewController {
         present(alert, animated: true)
     }
     
+    @IBAction func didPayButtonTapped(_ sender: UISwitch) {
+        if borrowerNameTextField.text?.isEmpty == true {
+            sender.isOn = false
+        }
+    }
+    
     @IBAction func saveButtonTapped(_ sender: UIButton) {
         if let transaction = transaction {
-            let existingTransaction = Transaction(id: transaction.id, amount: Double(amountTextField.text?.replacingOccurrences(of: "₹", with: "") ?? "") ?? 0, categoty: categoryTextField.text ?? "", timestamp: dateSelected.timeIntervalSince1970, type: selectedTab == .expense ? "Debit" : "Credit", note: noteTextField.text ?? "")
+            let existingTransaction = Transaction(id: transaction.id, amount: Double(amountTextField.text?.replacingOccurrences(of: "₹", with: "") ?? "") ?? 0, categoty: categoryTextField.text ?? "", timestamp: dateSelected.timeIntervalSince1970, type: selectedTab == .expense ? "Debit" : "Credit", note: noteTextField.text ?? "", borrower: borrowerNameTextField.text ?? "", didPay: didPaySwitch.isOn)
             APIService.shared.updateTransaction(existingTransaction) { result in
                 DispatchQueue.main.async {
                     switch result {
@@ -178,7 +188,7 @@ class AddTransactionViewController: UIViewController {
                 }
             }
         } else {
-            let newTransaction = Transaction(amount: Double(amountTextField.text?.replacingOccurrences(of: "₹", with: "") ?? "") ?? 0, categoty: categoryTextField.text ?? "", timestamp: dateSelected.timeIntervalSince1970, type: selectedTab == .expense ? "Debit" : "Credit", note: noteTextField.text ?? "")
+            let newTransaction = Transaction(amount: Double(amountTextField.text?.replacingOccurrences(of: "₹", with: "") ?? "") ?? 0, categoty: categoryTextField.text ?? "", timestamp: dateSelected.timeIntervalSince1970, type: selectedTab == .expense ? "Debit" : "Credit", note: noteTextField.text ?? "", borrower: borrowerNameTextField.text ?? "", didPay: didPaySwitch.isOn)
             APIService.shared.addTransaction(newTransaction){
                 NotificationCenter.default.post(name: .transactionsChanges, object: nil)
             }

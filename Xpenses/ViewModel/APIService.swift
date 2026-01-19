@@ -43,7 +43,9 @@ class APIService {
             category: transaction.category,
             date: transaction.timestamp,
             type: transaction.type,
-            note: transaction.note
+            note: transaction.note,
+            borrower: transaction.borrower,
+            didPay: transaction.didPay
         )
         let encoder = JSONEncoder()
         encoder.dateEncodingStrategy = .iso8601
@@ -77,7 +79,9 @@ class APIService {
             category: transaction.category,
             date: transaction.timestamp,
             type: transaction.type,
-            note: transaction.note
+            note: transaction.note,
+            borrower: transaction.borrower,
+            didPay: transaction.didPay
         )
         let encoder = JSONEncoder()
         encoder.dateEncodingStrategy = .iso8601

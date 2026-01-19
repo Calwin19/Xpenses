@@ -14,4 +14,6 @@ struct TransactionDTO: Codable {
     let date: TimeInterval
     let type: String
     let note: String?
+    var borrower: String?
+    var didPay: Bool = false
 }
