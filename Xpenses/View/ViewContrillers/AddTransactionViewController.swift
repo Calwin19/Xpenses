@@ -10,7 +10,10 @@ import UIKit
 class AddTransactionViewController: UIViewController {
     
     @IBOutlet weak var titleLabel: UILabel!
-    @IBOutlet weak var expenseIncomeSwitch: UISwitch!
+    @IBOutlet weak var selectionView: UIView!
+    @IBOutlet weak var expenseButton: UIButton!
+    @IBOutlet weak var incomeButton: UIButton!
+    @IBOutlet weak var selectionLeadingConstraint: NSLayoutConstraint!
     @IBOutlet weak var amountTextField: UITextField!
     @IBOutlet weak var categoryTextField: UITextField!
     @IBOutlet weak var dateButton: UIButton!
@@ -21,6 +24,7 @@ class AddTransactionViewController: UIViewController {
     var dateSelected: Date = Calendar.current.startOfDay(for: Date())
     var transaction: Transaction?
     private weak var acticeField: UIResponder?
+    var selectedTab: TransactionTab = .expense
     
     func initliseWithTransaction(_ transaction: Transaction) {
         self.transaction = transaction
@@ -55,7 +59,8 @@ class AddTransactionViewController: UIViewController {
             categoryTextField.text = transaction.category
             noteTextField.text = transaction.note
             dateButton.setTitle(Formatter.string(from: transaction.date), for: .normal)
-            titleLabel.text = "Edit Expense"
+            selectedTab = transaction.type == "Debit" ? .expense : .income
+            switchTab(to: selectedTab)
             dateSelected = transaction.date
         } else {
             dateButton.setTitle(Formatter.string(from: dateSelected), for: .normal)
@@ -100,18 +105,36 @@ class AddTransactionViewController: UIViewController {
         categoryTextField.becomeFirstResponder()
     }
     
+    func switchTab(to tab: TransactionTab) {
+        selectedTab = tab
+        UIView.animate(withDuration: 0.25, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0.5, options: [.curveEaseInOut]) {
+            if tab == .expense {
+                self.titleLabel.text = self.transaction == nil ? "Add Expense" : "Edit Expense"
+                self.saveButton.setTitle("Save Expense", for: .normal)
+                self.selectionLeadingConstraint.constant = 105
+                self.incomeButton.tintColor = UIColor(hex: "00752D")
+                self.expenseButton.tintColor = .white
+            } else {
+                self.titleLabel.text = self.transaction == nil ? "Add Income" : "Edit Income"
+                self.saveButton.setTitle("Save Income", for: .normal)
+                self.selectionLeadingConstraint.constant = 5
+                self.incomeButton.tintColor = .white
+                self.expenseButton.tintColor = UIColor(hex: "00752D")
+            }
+            self.view.layoutIfNeeded()
+        }
+    }
+    
     @IBAction func cancelButtonTapped(_ sender: Any) {
         self.navigationController?.popViewController(animated: true)
     }
+        
+    @IBAction func expenseTapped(_ sender: UIButton) {
+        switchTab(to: .expense)
+    }
     
-    @IBAction func expenseIncomeSwitch(_ sender: UISwitch) {
-        if sender.isOn {
-            titleLabel.text = transaction == nil ? "Add Expense" : "Edit Expense"
-            saveButton.setTitle("Save Expense", for: .normal)
-        } else {
-            titleLabel.text = transaction == nil ? "Add Income" : "Edit Income"
-            saveButton.setTitle("Save Income", for: .normal)
-        }
+    @IBAction func incomeTapped(_ sender: UIButton) {
+        switchTab(to: .income)
     }
     
     @IBAction func dateButtonTapped(_ sender: UIButton) {
@@ -143,7 +166,7 @@ class AddTransactionViewController: UIViewController {
     
     @IBAction func saveButtonTapped(_ sender: UIButton) {
         if let transaction = transaction {
-            let existingTransaction = Transaction(id: transaction.id, amount: Double(amountTextField.text?.replacingOccurrences(of: "₹", with: "") ?? "") ?? 0, categoty: categoryTextField.text ?? "", timestamp: dateSelected.timeIntervalSince1970, type: expenseIncomeSwitch.isOn ? "Debit" : "Credit", note: noteTextField.text ?? "")
+            let existingTransaction = Transaction(id: transaction.id, amount: Double(amountTextField.text?.replacingOccurrences(of: "₹", with: "") ?? "") ?? 0, categoty: categoryTextField.text ?? "", timestamp: dateSelected.timeIntervalSince1970, type: selectedTab == .expense ? "Debit" : "Credit", note: noteTextField.text ?? "")
             APIService.shared.updateTransaction(existingTransaction) { result in
                 DispatchQueue.main.async {
                     switch result {
@@ -155,7 +178,7 @@ class AddTransactionViewController: UIViewController {
                 }
             }
         } else {
-            let newTransaction = Transaction(amount: Double(amountTextField.text?.replacingOccurrences(of: "₹", with: "") ?? "") ?? 0, categoty: categoryTextField.text ?? "", timestamp: dateSelected.timeIntervalSince1970, type: expenseIncomeSwitch.isOn ? "Debit" : "Credit", note: noteTextField.text ?? "")
+            let newTransaction = Transaction(amount: Double(amountTextField.text?.replacingOccurrences(of: "₹", with: "") ?? "") ?? 0, categoty: categoryTextField.text ?? "", timestamp: dateSelected.timeIntervalSince1970, type: selectedTab == .expense ? "Debit" : "Credit", note: noteTextField.text ?? "")
             APIService.shared.addTransaction(newTransaction){
                 NotificationCenter.default.post(name: .transactionsChanges, object: nil)
             }
@@ -207,4 +230,9 @@ extension AddTransactionViewController: UITextFieldDelegate {
         return true
     }
 
+}
+
+enum TransactionTab {
+    case expense
+    case income
 }
