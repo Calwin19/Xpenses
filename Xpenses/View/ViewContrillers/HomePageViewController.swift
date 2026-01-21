@@ -55,6 +55,7 @@ class HomePageViewController: UIViewController {
                 switch result {
                 case .success(let data):
                     self.transactions = data
+                    CategoryStore.shared.update(from: data)
                     self.reloadTableView()
                 case .failure(let error):
                     print("API Error:", error)
@@ -109,7 +110,8 @@ class HomePageViewController: UIViewController {
     }
 
     func sumOfTransactions() {
-        totalSpendingLabel.text = "₹\(transactionSections.flatMap{ $0.transactions }.filter({$0.type == "Debit"}).reduce(0) {$0 + $1.amount})"
+        let totalSpending = transactionSections.flatMap{ $0.transactions }.filter({$0.type == "Debit"}).reduce(0) {$0 + $1.amount}
+        totalSpendingLabel.text = "₹\(formatWithCommas(totalSpending))"
     }
     
     func calculateBalance() {
@@ -120,10 +122,10 @@ class HomePageViewController: UIViewController {
 
         let expense = transactionSections
             .flatMap { $0.transactions }
-            .filter { $0.type == "Debit" }
+            .filter { $0.type == "Debit" && !$0.didPay}
             .reduce(0) { $0 + $1.amount }
 
-        balanceLabel.text = "₹\(income - expense)"
+        balanceLabel.text = "₹\(formatWithCommas(income - expense))"
     }
 
     func reloadTableView() {

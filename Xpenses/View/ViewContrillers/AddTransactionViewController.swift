@@ -16,7 +16,9 @@ class AddTransactionViewController: UIViewController {
     @IBOutlet weak var selectionLeadingConstraint: NSLayoutConstraint!
     @IBOutlet weak var amountTextField: UITextField!
     @IBOutlet weak var categoryTextField: UITextField!
+    @IBOutlet weak var categoryTableView: UITableView!
     @IBOutlet weak var dateButton: UIButton!
+    @IBOutlet weak var borrowerView: UIView!
     @IBOutlet weak var borrowerNameTextField: UITextField!
     @IBOutlet weak var didPaySwitch: UISwitch!
     @IBOutlet weak var noteTextField: UITextField!
@@ -27,6 +29,8 @@ class AddTransactionViewController: UIViewController {
     var transaction: Transaction?
     private weak var acticeField: UIResponder?
     var selectedTab: TransactionTab = .expense
+    var filteredCategories: [String] = []
+    var savedCategories: [String] = []
     
     func initliseWithTransaction(_ transaction: Transaction) {
         self.transaction = transaction
@@ -40,6 +44,15 @@ class AddTransactionViewController: UIViewController {
         categoryTextField.delegate = self
         noteTextField.delegate = self
         setupUI()
+        savedCategories = CategoryStore.shared.categories
+        filterCategories(with: "")
+        categoryTableView.delegate = self
+        categoryTableView.dataSource = self
+        categoryTableView.isHidden = true
+        categoryTableView.backgroundColor = UIColor(hex: "1C1C1E")
+        categoryTableView.layer.cornerRadius = 8
+        categoryTableView.layer.borderWidth = 1
+        categoryTableView.layer.borderColor = UIColor.systemGray4.cgColor
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -118,15 +131,32 @@ class AddTransactionViewController: UIViewController {
                 self.selectionLeadingConstraint.constant = 105
                 self.incomeButton.tintColor = UIColor(hex: "00752D")
                 self.expenseButton.tintColor = .white
+                self.borrowerView.isHidden = false
             } else {
                 self.titleLabel.text = self.transaction == nil ? "Add Income" : "Edit Income"
                 self.saveButton.setTitle("Save Income", for: .normal)
                 self.selectionLeadingConstraint.constant = 5
                 self.incomeButton.tintColor = .white
                 self.expenseButton.tintColor = UIColor(hex: "00752D")
+                self.borrowerView.isHidden = true
             }
             self.view.layoutIfNeeded()
         }
+    }
+    
+    func filterCategories(with text: String) {
+        if text.isEmpty {
+            filteredCategories = savedCategories
+            categoryTableView.reloadData()
+            return
+        }
+
+        filteredCategories = savedCategories.filter {
+            $0.lowercased().contains(text.lowercased())
+        }
+
+        categoryTableView.isHidden = filteredCategories.isEmpty
+        categoryTableView.reloadData()
     }
     
     @IBAction func cancelButtonTapped(_ sender: Any) {
@@ -139,6 +169,10 @@ class AddTransactionViewController: UIViewController {
     
     @IBAction func incomeTapped(_ sender: UIButton) {
         switchTab(to: .income)
+    }
+    
+    @IBAction func categoryDropDownTapped(_ sender: UIButton) {
+        categoryTableView.isHidden.toggle()
     }
     
     @IBAction func dateButtonTapped(_ sender: UIButton) {
@@ -171,10 +205,15 @@ class AddTransactionViewController: UIViewController {
     @IBAction func didPayButtonTapped(_ sender: UISwitch) {
         if borrowerNameTextField.text?.isEmpty == true {
             sender.isOn = false
+            showToast(message: "Enter a name")
         }
     }
     
     @IBAction func saveButtonTapped(_ sender: UIButton) {
+        if Double(amountTextField.text?.replacingOccurrences(of: "₹", with: "") ?? "") ?? 0 <= 0 {
+            showToast(message: "Enter a valid amount")
+            return
+        }
         if let transaction = transaction {
             let existingTransaction = Transaction(id: transaction.id, amount: Double(amountTextField.text?.replacingOccurrences(of: "₹", with: "") ?? "") ?? 0, categoty: categoryTextField.text ?? "", timestamp: dateSelected.timeIntervalSince1970, type: selectedTab == .expense ? "Debit" : "Credit", note: noteTextField.text ?? "", borrower: borrowerNameTextField.text ?? "", didPay: didPaySwitch.isOn)
             APIService.shared.updateTransaction(existingTransaction) { result in
@@ -215,11 +254,19 @@ extension AddTransactionViewController: UITextFieldDelegate {
     }
 
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        guard textField === amountTextField else {
+        if textField === amountTextField {
+            if range.location == 0 { return false }
+            return CharacterSet.decimalDigits.isSuperset(of: CharacterSet(charactersIn: string))
+        }
+        if textField === categoryTextField {
+            let currentText = textField.text ?? ""
+            let updatedText = (currentText as NSString)
+                .replacingCharacters(in: range, with: string)
+            
+            filterCategories(with: updatedText)
             return true
         }
-        if range.location == 0 { return false }
-        return CharacterSet.decimalDigits.isSuperset(of: CharacterSet(charactersIn: string))
+        return true
     }
 
     func textFieldDidEndEditing(_ textField: UITextField) {
@@ -241,6 +288,28 @@ extension AddTransactionViewController: UITextFieldDelegate {
     }
 
 }
+
+extension AddTransactionViewController: UITableViewDataSource, UITableViewDelegate {
+
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        filteredCategories.count
+    }
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryCell", for: indexPath)
+        cell.textLabel?.text = filteredCategories[indexPath.row]
+        return cell
+    }
+
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+
+        let selected = filteredCategories[indexPath.row]
+        categoryTextField.text = selected
+        categoryTableView.isHidden = true
+        noteTextField.becomeFirstResponder()
+    }
+}
+
 
 enum TransactionTab {
     case expense

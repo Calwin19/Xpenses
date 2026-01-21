@@ -36,3 +36,42 @@ extension UIColor {
         self.init(red: r, green: g, blue: b, alpha: 1.0)
     }
 }
+
+func formatWithCommas(_ value: Double) -> String {
+    let formatter = NumberFormatter()
+    formatter.numberStyle = .decimal
+    formatter.maximumFractionDigits = 2
+    formatter.minimumFractionDigits = value.truncatingRemainder(dividingBy: 1) == 0 ? 0 : 2
+
+    return formatter.string(from: NSNumber(value: value)) ?? "\(value)"
+}
+
+extension UIViewController {
+    
+    func showToast(message: String, duration: TimeInterval = 2.0) {
+        let toastLabel = UILabel()
+        toastLabel.text = message
+        toastLabel.textAlignment = .center
+        toastLabel.textColor = .white
+        toastLabel.backgroundColor = UIColor.black.withAlphaComponent(0.75)
+        toastLabel.font = UIFont.systemFont(ofSize: 14, weight: .medium)
+        toastLabel.numberOfLines = 0
+        toastLabel.alpha = 0
+        toastLabel.layer.cornerRadius = 12
+        toastLabel.clipsToBounds = true
+
+        let padding: CGFloat = 16
+        let maxWidth = self.view.frame.width - 40
+        let size = toastLabel.sizeThatFits(CGSize(width: maxWidth, height: .greatestFiniteMagnitude))
+        toastLabel.frame = CGRect(x: 20, y: self.view.frame.height - size.height - 120, width: maxWidth, height: size.height + padding)
+        self.view.addSubview(toastLabel)
+        UIView.animate(withDuration: 0.25) { toastLabel.alpha = 1 } completion: { _ in
+            UIView.animate(withDuration: 0.25, delay: duration,options: .curveEaseOut) {
+                toastLabel.alpha = 0
+            } completion: { _ in
+                toastLabel.removeFromSuperview()
+            }
+        }
+    }
+
+}
