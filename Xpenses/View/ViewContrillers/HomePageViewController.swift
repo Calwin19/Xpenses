@@ -31,6 +31,7 @@ class HomePageViewController: UIViewController {
         setupMonthFilterView()
         setupSpinner()
         getData()
+        transactionsTableView.register(UINib(nibName: "TransactionTableViewCell", bundle: nil), forCellReuseIdentifier: "TransactionTableViewCell")
     }
     
     override func viewWillAppear(_ animated: Bool) {

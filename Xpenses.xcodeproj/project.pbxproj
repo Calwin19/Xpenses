@@ -6,8 +6,28 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		A04279132F22AB9C00C18579 /* DGChartsDynamic in Frameworks */ = {isa = PBXBuildFile; productRef = A04279122F22AB9C00C18579 /* DGChartsDynamic */; };
+		A04279162F22ABBE00C18579 /* DGChartsDynamic in Embed Frameworks */ = {isa = PBXBuildFile; productRef = A04279122F22AB9C00C18579 /* DGChartsDynamic */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		A0E856B72F22A9DE0049BCE2 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				A04279162F22ABBE00C18579 /* DGChartsDynamic in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		A07242312F110234002CA8D3 /* Xpenses.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Xpenses.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A0E856B92F22AA110049BCE2 /* Charts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Charts.framework; path = System/Library/Frameworks/Charts.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -36,6 +56,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A04279132F22AB9C00C18579 /* DGChartsDynamic in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -46,6 +67,7 @@
 			isa = PBXGroup;
 			children = (
 				A07242332F110234002CA8D3 /* Xpenses */,
+				A0E856B82F22AA110049BCE2 /* Frameworks */,
 				A07242322F110234002CA8D3 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -58,6 +80,14 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		A0E856B82F22AA110049BCE2 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				A0E856B92F22AA110049BCE2 /* Charts.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -68,6 +98,7 @@
 				A072422D2F110234002CA8D3 /* Sources */,
 				A072422E2F110234002CA8D3 /* Frameworks */,
 				A072422F2F110234002CA8D3 /* Resources */,
+				A0E856B72F22A9DE0049BCE2 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -78,6 +109,7 @@
 			);
 			name = Xpenses;
 			packageProductDependencies = (
+				A04279122F22AB9C00C18579 /* DGChartsDynamic */,
 			);
 			productName = Xpenses;
 			productReference = A07242312F110234002CA8D3 /* Xpenses.app */;
@@ -107,6 +139,9 @@
 			);
 			mainGroup = A07242282F110234002CA8D3;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				A02509782F22A47E002F3C9F /* XCRemoteSwiftPackageReference "Charts" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = A07242322F110234002CA8D3 /* Products */;
 			projectDirPath = "";
@@ -343,6 +378,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		A02509782F22A47E002F3C9F /* XCRemoteSwiftPackageReference "Charts" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/danielgindi/Charts";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.1.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		A04279122F22AB9C00C18579 /* DGChartsDynamic */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A02509782F22A47E002F3C9F /* XCRemoteSwiftPackageReference "Charts" */;
+			productName = DGChartsDynamic;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = A07242292F110234002CA8D3 /* Project object */;
 }
