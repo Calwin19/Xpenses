@@ -11,6 +11,7 @@ class APIService {
     static let shared = APIService()
     private init() {}
     private let baseURL = "http://140.245.198.94"
+    
     func fetchTransactions(completion: @escaping (Result<[Transaction], Error>) -> Void) {
         let url = URL(string: "\(baseURL)/transactions")!
         URLSession.shared.dataTask(with: url) { data, response, error in
@@ -104,5 +105,58 @@ class APIService {
                 completion?(.failure(error))
             }
         }.resume()
+    }
+    
+    func fetchAssets(completion: @escaping (Result<[Asset], Error>) -> Void) {
+        let url = URL(string: "\(baseURL)/assets")!
+        URLSession.shared.dataTask(with: url) { data, response, error in
+            if let error = error {
+                completion(.failure(error))
+                return
+            }
+            guard let data = data else {
+                completion(.failure(NSError()))
+                return
+            }
+            do {
+                let assets = try JSONDecoder.isoDecoder.decode([Asset].self, from: data)
+                completion(.success(assets))
+            } catch {
+                completion(.failure(error))
+            }
+        }.resume()
+    }
+    
+    func addNewAsset(newAsset: Asset, completion: (() -> Void)? = nil) {
+        let url = URL(string: "\(baseURL)/assets")!
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        let dto = AssetDTO(id: newAsset.id, name: newAsset.name, type: newAsset.type, institution: newAsset.institution)
+        let encoder = JSONEncoder()
+        encoder.dateEncodingStrategy = .iso8601
+        request.httpBody = try? encoder.encode(dto)
+        URLSession.shared.dataTask(with: request) { _, _, _ in
+            DispatchQueue.main.async {
+                completion?()
+            }
+        }.resume()
+    }
+    
+    func addAssetValue(newAsset: Asset, completion: (() -> Void)? = nil) {
+        let url = URL(string: "\(baseURL)/assets/\(newAsset.id)/value")!
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        let dto = AssetValueDTO(id: newAsset.id, value: String(newAsset.latestValue), note: "")
+        let encoder = JSONEncoder()
+        encoder.dateEncodingStrategy = .iso8601
+        request.httpBody = try? encoder.encode(dto)
+        URLSession.shared.dataTask(with: request) { _, _, _ in
+            DispatchQueue.main.async {
+                completion?()
+            }
+        }.resume()
+
     }
 }

@@ -85,8 +85,13 @@ class MainTabBarController: UITabBarController {
 
     @objc private func addTapped() {
         guard let nav = selectedViewController as? UINavigationController else { return }
-        let addVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "AddTransactionViewController") as! AddTransactionViewController
-        nav.pushViewController(addVC, animated: true)
+        if selectedIndex == 4 {
+            let addVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "AddAssetViewController") as! AddAssetViewController
+            nav.pushViewController(addVC, animated: true)
+        } else {
+            let addVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "AddTransactionViewController") as! AddTransactionViewController
+            nav.pushViewController(addVC, animated: true)
+        }
     }
 
     override func viewDidLayoutSubviews() {
