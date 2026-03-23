@@ -148,7 +148,7 @@ class APIService {
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        let dto = AssetValueDTO(id: newAsset.id, value: String(newAsset.latestValue), note: "")
+        let dto = AssetValueDTO(id: UUID(), value: String(newAsset.latestValue), note: "")
         let encoder = JSONEncoder()
         encoder.dateEncodingStrategy = .iso8601
         request.httpBody = try? encoder.encode(dto)

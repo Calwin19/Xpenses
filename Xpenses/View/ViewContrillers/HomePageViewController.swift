@@ -211,4 +211,5 @@ extension HomePageViewController: MonthFilterViewDelegate {
 
 extension Notification.Name {
     static let transactionsChanges = Notification.Name("transactionsChanges")
+    static let assetsChanged = Notification.Name("assetsChanged")
 }

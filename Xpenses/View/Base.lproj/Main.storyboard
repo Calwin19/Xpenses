@@ -286,9 +286,18 @@
                                     </label>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="M7h-hh-88R">
                                         <rect key="frame" x="32" y="185.33333333333331" width="279" height="8"/>
+                                        <subviews>
+                                            <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fRr-OS-RbQ">
+                                                <rect key="frame" x="0.0" y="0.0" width="279" height="8"/>
+                                            </stackView>
+                                        </subviews>
                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                         <constraints>
+                                            <constraint firstAttribute="trailing" secondItem="fRr-OS-RbQ" secondAttribute="trailing" id="BUs-Re-Ol0"/>
                                             <constraint firstAttribute="height" constant="8" id="GzP-VD-70K"/>
+                                            <constraint firstAttribute="bottom" secondItem="fRr-OS-RbQ" secondAttribute="bottom" id="SVc-uo-ada"/>
+                                            <constraint firstItem="fRr-OS-RbQ" firstAttribute="top" secondItem="M7h-hh-88R" secondAttribute="top" id="gbb-2t-6D8"/>
+                                            <constraint firstItem="fRr-OS-RbQ" firstAttribute="leading" secondItem="M7h-hh-88R" secondAttribute="leading" id="yaH-Q9-spk"/>
                                         </constraints>
                                     </view>
                                 </subviews>
@@ -318,23 +327,22 @@
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="ARV-JB-JRX">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="ARV-JB-JRX">
                                 <rect key="frame" x="24" y="563" width="345" height="156"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <color key="sectionIndexBackgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="AssetTableViewCell" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="AssetTableViewCell" rowHeight="74" id="bdk-EZ-zpQ" customClass="AssetTableViewCell" customModule="Xpenses" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="50" width="345" height="74"/>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="AssetTableViewCell" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="AssetTableViewCell" rowHeight="84" id="bdk-EZ-zpQ" customClass="AssetTableViewCell" customModule="Xpenses" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="50" width="345" height="84"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="bdk-EZ-zpQ" id="gOZ-7e-7zY">
-                                            <rect key="frame" x="0.0" y="0.0" width="345" height="74"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="345" height="84"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7fe-C1-ANO">
                                                     <rect key="frame" x="0.0" y="0.0" width="345" height="74"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="E0F-2T-arl">
-                                                            <rect key="frame" x="20" y="20" width="205" height="19"/>
+                                                            <rect key="frame" x="20" y="20" width="205" height="20"/>
                                                             <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="16"/>
                                                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <nil key="highlightedColor"/>
@@ -349,7 +357,7 @@
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="252" verticalCompressionResistancePriority="751" text="Type" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4zz-WV-RPt">
-                                                            <rect key="frame" x="20" y="44" width="26.333333333333329" height="15"/>
+                                                            <rect key="frame" x="20" y="45" width="26.333333333333329" height="14"/>
                                                             <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="12"/>
                                                             <color key="textColor" red="0.58039215690000001" green="0.63921568630000003" blue="0.72156862749999995" alpha="1" colorSpace="calibratedRGB"/>
                                                             <nil key="highlightedColor"/>
@@ -377,7 +385,7 @@
                                             <constraints>
                                                 <constraint firstAttribute="trailing" secondItem="7fe-C1-ANO" secondAttribute="trailing" id="Z8y-Gl-qQZ"/>
                                                 <constraint firstItem="7fe-C1-ANO" firstAttribute="leading" secondItem="gOZ-7e-7zY" secondAttribute="leading" id="bKu-Gp-cmZ"/>
-                                                <constraint firstAttribute="bottom" secondItem="7fe-C1-ANO" secondAttribute="bottom" id="inj-Ip-BbV"/>
+                                                <constraint firstAttribute="bottom" secondItem="7fe-C1-ANO" secondAttribute="bottom" constant="10" id="inj-Ip-BbV"/>
                                                 <constraint firstItem="7fe-C1-ANO" firstAttribute="top" secondItem="gOZ-7e-7zY" secondAttribute="top" id="nHd-VM-6X2"/>
                                             </constraints>
                                         </tableViewCellContentView>
@@ -417,7 +425,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="MaM-PG-NoA"/>
                     <connections>
-                        <outlet property="assetAllocationView" destination="M7h-hh-88R" id="RQs-yw-c4b"/>
+                        <outlet property="assetAllocationView" destination="fRr-OS-RbQ" id="PWJ-L0-KvY"/>
                         <outlet property="assetsTableView" destination="ARV-JB-JRX" id="pFk-9V-nUk"/>
                         <outlet property="netWorthLabel" destination="IBp-7y-DoL" id="IFo-MS-1JU"/>
                     </connections>
@@ -994,7 +1002,7 @@
                                                 <rect key="frame" x="20" y="360.33333333333337" width="353" height="56"/>
                                                 <subviews>
                                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="rectangle.3.group.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="gTA-9x-eAd">
-                                                        <rect key="frame" x="16" y="15.666666666666657" width="24" height="25"/>
+                                                        <rect key="frame" x="16" y="15.666666666666661" width="24" height="25.000000000000011"/>
                                                         <color key="tintColor" red="0.56470588239999997" green="0.79607843140000001" blue="0.65490196079999996" alpha="1" colorSpace="calibratedRGB"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="28" id="FdU-Iy-7Yb"/>
@@ -1115,6 +1123,7 @@
                         <outlet property="institutionTextField" destination="T7d-LD-Nqf" id="MdU-DU-E5j"/>
                         <outlet property="nameTextField" destination="dTD-kH-9xW" id="mqf-06-lpR"/>
                         <outlet property="scrollView" destination="FdC-K7-afK" id="Eke-r1-qiI"/>
+                        <outlet property="titleLabel" destination="bzF-VN-ncd" id="f32-Z7-spQ"/>
                         <outlet property="typeTextField" destination="t5x-uw-25K" id="mEb-d6-yU3"/>
                     </connections>
                 </viewController>
