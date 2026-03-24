@@ -22,7 +22,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8Dp-5P-ESe" customClass="PieChartView" customModule="DGCharts">
-                                <rect key="frame" x="0.0" y="172" width="393" height="163"/>
+                                <rect key="frame" x="0.0" y="254" width="393" height="81"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             </view>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="r4b-RI-cDW">
@@ -33,28 +33,39 @@
                                 </constraints>
                                 <color key="sectionIndexBackgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </tableView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="j25-Au-RQN">
+                                <rect key="frame" x="0.0" y="172" width="393" height="82"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="82" id="Qih-x9-AwS"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Tz0-4I-AVG"/>
                         <color key="backgroundColor" red="0.058823529409999999" green="0.13725490200000001" blue="0.090196078430000007" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstItem="Tz0-4I-AVG" firstAttribute="bottom" secondItem="r4b-RI-cDW" secondAttribute="bottom" id="7tg-k0-h6u"/>
+                            <constraint firstItem="j25-Au-RQN" firstAttribute="leading" secondItem="Tz0-4I-AVG" secondAttribute="leading" id="BGc-fB-Kid"/>
                             <constraint firstItem="Tz0-4I-AVG" firstAttribute="trailing" secondItem="r4b-RI-cDW" secondAttribute="trailing" id="HXG-Zx-NxE"/>
-                            <constraint firstItem="8Dp-5P-ESe" firstAttribute="top" secondItem="Tz0-4I-AVG" secondAttribute="top" id="T4u-qW-h0q"/>
+                            <constraint firstItem="j25-Au-RQN" firstAttribute="top" secondItem="Tz0-4I-AVG" secondAttribute="top" id="JO7-bR-kiw"/>
                             <constraint firstItem="r4b-RI-cDW" firstAttribute="top" secondItem="8Dp-5P-ESe" secondAttribute="bottom" id="aLH-vw-re0"/>
                             <constraint firstItem="8Dp-5P-ESe" firstAttribute="leading" secondItem="Tz0-4I-AVG" secondAttribute="leading" id="duc-Pb-ftV"/>
+                            <constraint firstItem="8Dp-5P-ESe" firstAttribute="top" secondItem="j25-Au-RQN" secondAttribute="bottom" id="faC-38-Mmb"/>
                             <constraint firstItem="r4b-RI-cDW" firstAttribute="leading" secondItem="Tz0-4I-AVG" secondAttribute="leading" id="uRN-ga-mpO"/>
                             <constraint firstItem="Tz0-4I-AVG" firstAttribute="trailing" secondItem="8Dp-5P-ESe" secondAttribute="trailing" id="v5m-5O-jTi"/>
+                            <constraint firstItem="j25-Au-RQN" firstAttribute="trailing" secondItem="Tz0-4I-AVG" secondAttribute="trailing" id="xgE-b4-ITj"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="2Pf-BB-fYT"/>
                     <connections>
+                        <outlet property="monthFilterContainer" destination="j25-Au-RQN" id="e2T-h2-JKV"/>
                         <outlet property="pieChartView" destination="8Dp-5P-ESe" id="N6u-j1-dVD"/>
                         <outlet property="transactionsTableView" destination="r4b-RI-cDW" id="RqZ-Mc-Zyh"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ViW-D9-isX" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="772" y="2473"/>
+            <point key="canvasLocation" x="771.75572519083971" y="2472.535211267606"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="N3e-W1-dcW">

@@ -113,7 +113,7 @@ class HomePageViewController: UIViewController {
     func sumOfTransactions() {
         let totalSpending = transactionSections
             .flatMap{ $0.transactions }
-            .filter({$0.type == "Debit" && !$0.didPay})
+            .filter({$0.type == "Debit" && ($0.borrower?.isEmpty ?? true)})
             .reduce(0) {$0 + $1.amount}
         totalSpendingLabel.text = "₹\(formatWithCommas(totalSpending))"
     }
@@ -126,7 +126,7 @@ class HomePageViewController: UIViewController {
 
         let expense = transactionSections
             .flatMap { $0.transactions }
-            .filter { $0.type == "Debit" && !$0.didPay}
+            .filter { $0.type == "Debit" && ($0.borrower?.isEmpty ?? true)}
             .reduce(0) { $0 + $1.amount }
 
         balanceLabel.text = "₹\(formatWithCommas(income - expense))"

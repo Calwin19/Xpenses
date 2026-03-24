@@ -13,9 +13,13 @@ class AnalysisViewController: UIViewController {
 
     @IBOutlet weak var pieChartView: PieChartView!
     @IBOutlet weak var transactionsTableView: UITableView!
+    @IBOutlet weak var monthFilterContainer: UIView!
     
-    var transactions: [Transaction] = []
+    var allTransactions: [Transaction] = []
+    var selectedMonthransactions: [Transaction] = []
     var categorySections: [CategorySection] = []
+    var monthFilterView: MonthFilterView!
+    var selectedMonth = Date()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -23,6 +27,7 @@ class AnalysisViewController: UIViewController {
         transactionsTableView.dataSource = self
         pieChartView.delegate = self
         transactionsTableView.register(UINib(nibName: "TransactionTableViewCell", bundle: nil), forCellReuseIdentifier: "TransactionTableViewCell")
+        setupMonthFilterView()
     }
     
     func getData() {
@@ -30,8 +35,9 @@ class AnalysisViewController: UIViewController {
             DispatchQueue.main.async {
                 switch result {
                 case .success(let data):
-                    self.transactions = data
-                    self.categorySections = self.makeCategorySections(from: self.transactions)
+                    self.allTransactions = data.filter( {$0.type == "Debit" && ($0.borrower?.isEmpty ?? true)})
+                    self.selectedMonthransactions = self.allTransactions.filter { Calendar.current.isDate($0.date, equalTo: self.selectedMonth, toGranularity: .month)}.sorted { $0.date > $1.date }
+                    self.categorySections = self.makeCategorySections(from: self.selectedMonthransactions)
                     self.updatePieChart(with: self.categorySections)
                     self.transactionsTableView.reloadData()
                 case .failure(let error):
@@ -77,6 +83,22 @@ class AnalysisViewController: UIViewController {
         formatter.percentSymbol = " %"
     }
 
+    func setupMonthFilterView() {
+        monthFilterView = Bundle.main.loadNibNamed("MonthFilterView", owner: self)?.first as? MonthFilterView
+        monthFilterView.frame = monthFilterContainer.bounds
+        monthFilterView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        monthFilterView.delegate = self
+        monthFilterView.update(month: selectedMonth)
+        monthFilterContainer.addSubview(monthFilterView)
+    }
+
+    func reloadTableView() {
+        self.selectedMonthransactions = self.allTransactions.filter { Calendar.current.isDate($0.date, equalTo: self.selectedMonth, toGranularity: .month)}.sorted { $0.date > $1.date }
+        self.categorySections = self.makeCategorySections(from: self.selectedMonthransactions)
+        self.updatePieChart(with: self.categorySections)
+        self.transactionsTableView.reloadData()
+    }
+
 }
 
 extension AnalysisViewController: UITableViewDataSource{
@@ -106,3 +128,28 @@ extension AnalysisViewController: ChartViewDelegate {
         print("Selected:", entry.y)
     }
 }
+
+extension AnalysisViewController: MonthFilterViewDelegate {
+    func didTapMonth() {
+        showMonthPicker()
+    }
+    
+    func showMonthPicker() {
+        let alert = UIAlertController(title: "Select Month", message: nil, preferredStyle: .actionSheet)
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MMMM yyyy"
+        for offset in 0..<12 {
+            if let date = Calendar.current.date(byAdding: .month, value: -offset, to: Date()) {
+                alert.addAction(UIAlertAction(title: formatter.string(from: date), style: .default) { _ in
+                    self.selectedMonth = date
+                    self.monthFilterView.update(month: date)
+                    self.reloadTableView()
+                })
+            }
+        }
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+        present(alert, animated: true)
+    }
+
+}
+
