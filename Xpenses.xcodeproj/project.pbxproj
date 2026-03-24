@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		A04279132F22AB9C00C18579 /* DGChartsDynamic in Frameworks */ = {isa = PBXBuildFile; productRef = A04279122F22AB9C00C18579 /* DGChartsDynamic */; };
 		A04279162F22ABBE00C18579 /* DGChartsDynamic in Embed Frameworks */ = {isa = PBXBuildFile; productRef = A04279122F22AB9C00C18579 /* DGChartsDynamic */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		A063BB0F2F72F9030020B548 /* FSCalendar in Frameworks */ = {isa = PBXBuildFile; productRef = A063BB0E2F72F9030020B548 /* FSCalendar */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -57,6 +58,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A04279132F22AB9C00C18579 /* DGChartsDynamic in Frameworks */,
+				A063BB0F2F72F9030020B548 /* FSCalendar in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -110,6 +112,7 @@
 			name = Xpenses;
 			packageProductDependencies = (
 				A04279122F22AB9C00C18579 /* DGChartsDynamic */,
+				A063BB0E2F72F9030020B548 /* FSCalendar */,
 			);
 			productName = Xpenses;
 			productReference = A07242312F110234002CA8D3 /* Xpenses.app */;
@@ -141,6 +144,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				A02509782F22A47E002F3C9F /* XCRemoteSwiftPackageReference "Charts" */,
+				A063BB0D2F72F9030020B548 /* XCRemoteSwiftPackageReference "FSCalendar" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = A07242322F110234002CA8D3 /* Products */;
@@ -388,6 +392,14 @@
 				minimumVersion = 5.1.0;
 			};
 		};
+		A063BB0D2F72F9030020B548 /* XCRemoteSwiftPackageReference "FSCalendar" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/WenchaoD/FSCalendar";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.8.4;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -395,6 +407,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = A02509782F22A47E002F3C9F /* XCRemoteSwiftPackageReference "Charts" */;
 			productName = DGChartsDynamic;
+		};
+		A063BB0E2F72F9030020B548 /* FSCalendar */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A063BB0D2F72F9030020B548 /* XCRemoteSwiftPackageReference "FSCalendar" */;
+			productName = FSCalendar;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
