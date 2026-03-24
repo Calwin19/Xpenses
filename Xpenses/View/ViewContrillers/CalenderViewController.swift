@@ -13,6 +13,8 @@ class CalenderViewController: UIViewController {
     @IBOutlet weak var calendarView: FSCalendar!
     @IBOutlet weak var calendarHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var transactionsTableView: UITableView!
+    @IBOutlet weak var monthExpenseTitleLabel: UILabel!
+    @IBOutlet weak var monthExpenseLabel: UILabel!
     
     var transactions = [Transaction]()
     var transactionSections = [TransactionSection]()
@@ -66,6 +68,7 @@ class CalenderViewController: UIViewController {
                 case .success(let data):
                     self.transactions = data.filter( {$0.type == "Debit" && ($0.borrower?.isEmpty ?? true)})
                     CategoryStore.shared.update(from: data)
+                    self.calendarCurrentPageDidChange(self.calendarView)
                     self.calendarView.reloadData()
                 case .failure(let error):
                     print("API Error:", error)
@@ -132,6 +135,16 @@ extension CalenderViewController: FSCalendarDelegate, FSCalendarDataSource {
             ]
         }
         transactionsTableView.reloadData()
+    }
+    
+    func calendarCurrentPageDidChange(_ calendar: FSCalendar) {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MMMM yyyy"
+        monthExpenseTitleLabel.text = "Expenses for \(formatter.string(from: calendar.currentPage))".uppercased()
+        let total = transactions.filter {
+            Calendar.current.isDate($0.date, equalTo: calendar.currentPage, toGranularity: .month)
+        }.reduce(0) { $0 + $1.amount }
+        monthExpenseLabel.text = "₹\(Int(total))"
     }
 }
 
