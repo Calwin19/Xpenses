@@ -28,6 +28,8 @@ class AnalysisViewController: UIViewController {
         pieChartView.delegate = self
         transactionsTableView.register(UINib(nibName: "TransactionTableViewCell", bundle: nil), forCellReuseIdentifier: "TransactionTableViewCell")
         setupMonthFilterView()
+        self.edgesForExtendedLayout = [.all]
+        self.extendedLayoutIncludesOpaqueBars = true
     }
     
     func getData() {

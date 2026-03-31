@@ -20,30 +20,29 @@ class TransactionTableViewCell: UITableViewCell {
         categoryLabel.text = transaction.category?.capitalized
         if let borrower = transaction.borrower, !borrower.isEmpty {
             amountLabel.text = "-₹\(formatWithCommas(transaction.amount))"
+            amountLabel.textColor = UIColor(hex: "FF3445")
             if transaction.didPay {
+                transactionTypeView.isHidden = false
                 transactionTypeView.backgroundColor = UIColor(hex: "E9A23B")
                 transactionTypeLabel.textColor = UIColor(hex: "1C1C1E")
                 transactionTypeView.layer.borderWidth = 0
-                transactionTypeLabel.text = "BORROWED (PAID)"
+                transactionTypeLabel.text = "Recovered"
             } else {
+                transactionTypeView.isHidden = false
                 transactionTypeView.backgroundColor = .clear
                 transactionTypeLabel.textColor = UIColor(hex: "E9A23B")
                 transactionTypeView.layer.borderWidth = 1
-                transactionTypeLabel.text = "BORROWED"
+                transactionTypeLabel.text = "Recoverable"
                 transactionTypeView.layer.borderColor = UIColor(hex: "E9A23B").cgColor
             }
         } else if transaction.type == "Debit" {
             amountLabel.text = "-₹\(formatWithCommas(transaction.amount))"
-            transactionTypeView.backgroundColor = UIColor(hex: "333334")
-            transactionTypeLabel.textColor = UIColor(hex: "8D98A9")
-            transactionTypeView.layer.borderWidth = 0
-            transactionTypeLabel.text = "DEBIT"
+            amountLabel.textColor = UIColor(hex: "FF3445")
+            transactionTypeView.isHidden = true
         } else {
             amountLabel.text = "₹\(formatWithCommas(transaction.amount))"
-            transactionTypeView.backgroundColor = UIColor(hex: "1A2B26")
-            transactionTypeLabel.textColor = UIColor(hex: "68CC9A")
-            transactionTypeView.layer.borderWidth = 0
-            transactionTypeLabel.text = "CREDIT"
+            amountLabel.textColor = UIColor(hex: "3CE36A")
+            transactionTypeView.isHidden = true
         }
     }
 }

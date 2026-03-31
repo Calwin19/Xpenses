@@ -13,10 +13,13 @@ protocol MonthFilterViewDelegate: AnyObject {
 
 class HomePageViewController: UIViewController {
     
+    @IBOutlet weak var balanceView: UIView!
     @IBOutlet weak var transactionsTableView: UITableView!
     @IBOutlet weak var totalSpendingLabel: UILabel!
     @IBOutlet weak var monthFilterContainer: UIView!
     @IBOutlet weak var balanceLabel: UILabel!
+    @IBOutlet weak var decimalLabel: UILabel!
+    @IBOutlet weak var recoverableBalanceLabel: UILabel!
     
     private let spinner = UIActivityIndicatorView(style: .large)
     var transactionSections = [TransactionSection]()
@@ -31,7 +34,10 @@ class HomePageViewController: UIViewController {
         setupMonthFilterView()
         setupSpinner()
         getData()
+        setUpUI()
         transactionsTableView.register(UINib(nibName: "TransactionTableViewCell", bundle: nil), forCellReuseIdentifier: "TransactionTableViewCell")
+        self.edgesForExtendedLayout = [.all]
+        self.extendedLayoutIncludesOpaqueBars = true
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -44,10 +50,42 @@ class HomePageViewController: UIViewController {
         NotificationCenter.default.removeObserver(self)
     }
 
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        view.layer.sublayers?.forEach {
+            if let gradient = $0 as? CAGradientLayer {
+                gradient.frame = view.bounds
+            }
+        }
+    }
+    
     @objc private func reloadTransactions() {
         getData()
     }
 
+    func setUpUI() {
+        let gradient = CAGradientLayer()
+        gradient.frame = balanceView.bounds
+        gradient.colors = [UIColor(hex: "3CE36A").withAlphaComponent(0.05).cgColor, UIColor(hex: "004F1C").withAlphaComponent(0.02).cgColor]
+        gradient.startPoint = CGPoint(x: 0, y: 0)
+        gradient.endPoint = CGPoint(x: 1, y: 1)
+        gradient.cornerRadius = 24
+        balanceView.layer.insertSublayer(gradient, at: 0)
+        balanceView.layer.borderColor = UIColor(hex: "3F4945").withAlphaComponent(0.1).cgColor
+        balanceView.layer.borderWidth = 1
+        let glowLayer = CAGradientLayer()
+        glowLayer.frame = balanceView.bounds
+        glowLayer.colors = [
+            UIColor(hex: "3CE36A").withAlphaComponent(0.2).cgColor,
+            UIColor.clear.cgColor,
+            UIColor.clear.cgColor
+        ]
+        glowLayer.startPoint = CGPoint(x: 1, y: 0)
+        glowLayer.endPoint = CGPoint(x: 0, y: 1)
+        glowLayer.cornerRadius = 24
+        balanceView.layer.insertSublayer(glowLayer, at: 0)
+    }
+    
     func getData() {
         showSpinner()
         APIService.shared.fetchTransactions { result in
@@ -115,7 +153,17 @@ class HomePageViewController: UIViewController {
             .flatMap{ $0.transactions }
             .filter({$0.type == "Debit" && ($0.borrower?.isEmpty ?? true)})
             .reduce(0) {$0 + $1.amount}
-        totalSpendingLabel.text = "₹\(formatWithCommas(totalSpending))"
+        let totalRecovarable = transactionSections
+            .flatMap{ $0.transactions }
+            .filter({$0.type == "Debit" && (!($0.borrower?.isEmpty ?? true) && !$0.didPay)})
+            .reduce(0) {$0 + $1.amount}
+        totalSpendingLabel.text = "₹\(formatWithCommas(totalSpending).split(separator: ".")[0])"
+        recoverableBalanceLabel.text = "₹\(formatWithCommas(totalRecovarable))"
+        if formatWithCommas(totalSpending).split(separator: ".").count > 1 {
+            decimalLabel.text = ".\(formatWithCommas(totalSpending).split(separator: ".")[1])"
+        } else {
+            decimalLabel.isHidden = true
+        }
     }
     
     func calculateBalance() {

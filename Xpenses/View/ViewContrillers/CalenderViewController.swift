@@ -32,6 +32,8 @@ class CalenderViewController: UIViewController {
         calendarView.placeholderType = .none
         calendarView.adjustsBoundingRectWhenChangingMonths = true
         transactionsTableView.register(UINib(nibName: "TransactionTableViewCell", bundle: nil), forCellReuseIdentifier: "TransactionTableViewCell")
+        self.edgesForExtendedLayout = [.all]
+        self.extendedLayoutIncludesOpaqueBars = true
     }
     
     func setupSpinner() {

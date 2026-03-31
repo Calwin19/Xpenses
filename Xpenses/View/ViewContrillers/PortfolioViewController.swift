@@ -19,7 +19,8 @@ class PortfolioViewController: UIViewController {
         assetsTableView.dataSource = self
         assetsTableView.delegate = self
         updateUI()
-        
+        self.edgesForExtendedLayout = [.all]
+        self.extendedLayoutIncludesOpaqueBars = true
     }
     
     override func viewWillAppear(_ animated: Bool) {

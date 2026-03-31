@@ -8,16 +8,16 @@
 import UIKit
 
 class MainTabBarController: UITabBarController {
-
+    
     private let addButton = UIButton()
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         delegate = self
         attachNavDelegates()
-        disableMiddleTab()
-        setupAddButton()
         configureTabBarAppearance()
+        setupAddButton()
+        addButton.addTarget(self, action: #selector(addTapped), for: .touchUpInside)
     }
     
     private func attachNavDelegates() {
@@ -28,61 +28,31 @@ class MainTabBarController: UITabBarController {
         }
     }
 
-    private func disableMiddleTab() {
-        guard let items = tabBar.items, items.count == 5 else { return }
-
-        let middleItem = items[2]
-        middleItem.isEnabled = false
-        middleItem.title = ""
-        middleItem.image = nil
-    }
-
     private func setupAddButton() {
         addButton.translatesAutoresizingMaskIntoConstraints = false
-        addButton.backgroundColor = UIColor(
-            red: 34/255,
-            green: 160/255,
-            blue: 84/255,
-            alpha: 1
-        )
-        addButton.layer.cornerRadius = 32
-        addButton.setImage(UIImage(systemName: "plus"), for: .normal)
-        addButton.tintColor = .white
-
-        addButton.layer.shadowColor = UIColor.black.cgColor
-        addButton.layer.shadowOpacity = 0.4
-        addButton.layer.shadowRadius = 10
-        addButton.layer.shadowOffset = CGSize(width: 0, height: 6)
-
+        addButton.backgroundColor = UIColor(hex: "3CE36A")
+        addButton.layer.cornerRadius = 24
+        addButton.setImage(UIImage(named: "PLUS"), for: .normal)
         view.addSubview(addButton)
-
         NSLayoutConstraint.activate([
             addButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             addButton.bottomAnchor.constraint(
                 equalTo: view.safeAreaLayoutGuide.bottomAnchor,
-                constant: -24
+                constant: -4
             ),
-            addButton.widthAnchor.constraint(equalToConstant: 64),
-            addButton.heightAnchor.constraint(equalToConstant: 64)
+            addButton.widthAnchor.constraint(equalToConstant: 48),
+            addButton.heightAnchor.constraint(equalToConstant: 48)
         ])
-        addButton.addTarget(self, action: #selector(addTapped), for: .touchUpInside)
+        addButton.layer.masksToBounds = false
     }
-
+    
     private func configureTabBarAppearance() {
         let appearance = UITabBarAppearance()
-        appearance.configureWithTransparentBackground()
-        appearance.stackedLayoutAppearance.normal.iconColor = .gray
-        appearance.stackedLayoutAppearance.normal.titleTextAttributes = [
-            .foregroundColor: UIColor.gray
-        ]
-        appearance.stackedLayoutAppearance.selected.iconColor = UIColor.systemGreen
-        appearance.stackedLayoutAppearance.selected.titleTextAttributes = [
-            .foregroundColor: UIColor.systemGreen
-        ]
+        appearance.backgroundColor = UIColor(hex: "1C211E").withAlphaComponent(0.9)
         tabBar.standardAppearance = appearance
         tabBar.scrollEdgeAppearance = appearance
     }
-
+    
     @objc private func addTapped() {
         guard let nav = selectedViewController as? UINavigationController else { return }
         if selectedIndex == 4 {
@@ -93,17 +63,35 @@ class MainTabBarController: UITabBarController {
             nav.pushViewController(addVC, animated: true)
         }
     }
-
+    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         view.bringSubviewToFront(addButton)
-        tabBar.items?.forEach {
-            $0.imageInsets = UIEdgeInsets(top: 6, left: 0, bottom: -6, right: 0)
+        let height: CGFloat = 64
+        let margin: CGFloat = 16
+        tabBar.frame = CGRect( x: margin, y: view.frame.height - height - 20, width: view.frame.width - (margin * 2), height: height )
+        tabBar.layer.cornerRadius = height / 2
+        tabBar.layer.masksToBounds = true
+        let offset = (tabBar.frame.height - 42) / 2
+        tabBar.items?.forEach { $0.title = nil
+            $0.imageInsets = UIEdgeInsets(top: offset, left: 0, bottom: -offset, right: 0)
+            $0.image = $0.image?.withRenderingMode(.alwaysOriginal)
+            $0.selectedImage = $0.selectedImage?.withRenderingMode(.alwaysOriginal)
         }
     }
 }
 
-extension MainTabBarController: UITabBarControllerDelegate {}
+extension MainTabBarController: UITabBarControllerDelegate {
+    
+    func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
+        guard let index = viewControllers?.firstIndex(of: viewController) else { return true }
+        if index == 2 {
+            addTapped()
+            return false
+        }
+        return true
+    }
+}
 
 extension MainTabBarController: UINavigationControllerDelegate {
 
